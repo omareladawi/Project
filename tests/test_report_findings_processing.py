@@ -112,3 +112,22 @@ def test_generate_report_suppresses_basic_security_headers_overview_and_merges_e
     assert "Found 2 email indicators" in info_disclosure["evidence"]
     assert "Found 1 API token indicator" in info_disclosure["evidence"]
     assert report["risk_score"] >= 0
+
+
+def test_generate_report_respects_enforced_expected_service_setting():
+    scan_results = {
+        "target": "https://example.com",
+        "service_requirement_enforced": True,
+        "findings": [
+            {
+                "type": "Expected Service Not Found",
+                "severity": "Medium",
+                "url": "https://example.com",
+                "description": "Expected SSH service not found on standard port 22",
+                "evidence": "Connection attempt failed",
+            }
+        ],
+    }
+
+    report = json.loads(generate_report(scan_results, output_format="json"))
+    assert report["findings"][0]["severity"] == "Medium"

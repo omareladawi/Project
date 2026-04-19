@@ -42,14 +42,21 @@ def generate_report(
     else:
         scan_data = dict(scan_results)
 
-    findings = _prepare_findings(scan_data.get('findings', []))
+    service_requirement_enforced = bool(scan_data.get('service_requirement_enforced', False))
+    findings = _prepare_findings(
+        scan_data.get('findings', []),
+        service_requirement_enforced=service_requirement_enforced
+    )
     scan_data['findings'] = findings
 
     modules = scan_data.get('modules', [])
     for module in modules:
         module_findings = module.get('findings', [])
         if isinstance(module_findings, list):
-            module['findings'] = _prepare_findings(module_findings)
+            module['findings'] = _prepare_findings(
+                module_findings,
+                service_requirement_enforced=service_requirement_enforced
+            )
             module['risk_score'] = _calculate_risk_score(module['findings'])
 
     test_name_map = {
@@ -302,13 +309,13 @@ def _suppress_generic_header_overview(findings: List[Dict]) -> List[Dict]:
         filtered.append(finding)
     return filtered
 
-def _prepare_findings(findings: List[Dict]) -> List[Dict]:
+def _prepare_findings(findings: List[Dict], service_requirement_enforced: bool = False) -> List[Dict]:
     merged = {}
     for finding in findings:
         if not isinstance(finding, dict):
             continue
         finding_copy = dict(finding)
-        if _is_expected_ssh_not_found(finding_copy):
+        if _is_expected_ssh_not_found(finding_copy) and not service_requirement_enforced:
             finding_copy['severity'] = 'Info'
         finding_copy['confidence_score'] = _assign_confidence(finding_copy)
         issue_key = _finding_issue_key(finding_copy)
