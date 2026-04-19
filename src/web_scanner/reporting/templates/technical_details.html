@@ -535,6 +535,10 @@
                     <div class="stat-number">{{ confidence_score|default('N/A') }}</div>
                     <div class="stat-label">Confidence Score</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ risk_score|default(0.0) }}</div>
+                    <div class="stat-label">Overall Risk Score</div>
+                </div>
             </div>
 
             <!-- Test Execution Details -->
@@ -726,6 +730,9 @@
                     
                     <p><strong>URL:</strong> {{ vuln.url }}</p>
                     <p><strong>Description:</strong> {{ vuln.description }}</p>
+                    {% if vuln.status == 'not_applicable' %}
+                    <p><strong>Classification:</strong> Not Applicable (informational context)</p>
+                    {% endif %}
                     
                     <!-- Add confidence score -->
                     <div class="confidence-score">
