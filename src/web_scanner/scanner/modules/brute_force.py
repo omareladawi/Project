@@ -95,9 +95,10 @@ class BruteForceModule:
                     })
                 elif target_service['expected']:
                     # Only report unavailable services when they're expected
+                    expected_severity = 'Info' if service_name == 'SSH' else 'Medium'
                     findings.append({
                         'type': 'Expected Service Not Found',
-                        'severity': 'Medium',
+                        'severity': expected_severity,
                         'url': target_url,
                         'description': f'Expected {service_name} service not found on standard port {port}',
                         'evidence': f'Connection attempt to {host}:{port} failed',

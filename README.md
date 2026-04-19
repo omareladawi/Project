@@ -245,6 +245,7 @@ test_weights:
 - Respect rate limits and robots.txt
 - Use responsibly and ethically
 - Test thoroughly in isolated environments
+- Findings are indicators from automated checks and may require manual validation to confirm true positives.
 
 ## Acknowledgment
 
