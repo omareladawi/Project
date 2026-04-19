@@ -20,20 +20,21 @@ dependencies = [
     "paramiko>=2.8.1",
     "python-nmap>=0.7.1",
     "scapy>=2.5.0",
-    "flask>=2.0.0",
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.19.0",
     "python-dotenv>=0.19.0",
     "typing-extensions>=4.0.0",
     "structlog>=23.1.0",
     "validators>=0.20.0",
-    "reportlab>=3.6.8",
-    "setuptools>=65.0.0"
+    "reportlab>=3.6.8"
 ]
 
 [project.optional-dependencies]
 network = ["scapy>=2.5.0"]
 full = ["scapy>=2.5.0", "python-nmap>=0.7.1"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.19.0"
+]
+ui = ["flask>=2.0.0"]
 
 [project.scripts]
 webscan = "web_scanner.main:run_scanner"
@@ -46,13 +47,4 @@ packages = ["web_scanner"]
 web_scanner = [
     "reporting/templates/*.html",
     "config/*.yaml"
-]
-
-[tool.pytest.ini_options]
-pythonpath = [
-    "."
-]
-addopts = "-v"
-testpaths = [
-    "tests"
 ]
