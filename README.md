@@ -14,9 +14,9 @@ web-scanner/
 │       ├── types.py                # Type definitions
 │       ├── crawler.py              # Web crawler functionality
 │       └── main.py                 # CLI entry point
-├── tests/                          # Test suites
 ├── .env.example                    # Environment variables template
 ├── config/                         # Default configurations
+├── NOTICE.md                       # Attribution and license context
 ├── pyproject.toml
 ├── requirements.txt
 └── setup.py
@@ -114,6 +114,25 @@ cd web-scanner
 ```bash
 pip install -e .
 ```
+
+### Development
+
+- Runtime install:
+  ```bash
+  pip install -e .
+  ```
+- Install development dependencies:
+  ```bash
+  pip install -e ".[dev]"
+  ```
+- Run from CLI:
+  ```bash
+  webscan --url https://example.com --modules recon --format html
+  ```
+- Run as Python module:
+  ```bash
+  python -m web_scanner.main --url https://example.com --modules recon --format html
+  ```
 
 ## Usage
 
@@ -241,6 +260,4 @@ I appreciate the role of AI in enhancing productivity and welcome any feedback o
 nottttteeee 
 
 the tool is still in construction it will inshaa-allah devolped before july
-
-
 
