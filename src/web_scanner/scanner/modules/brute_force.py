@@ -19,6 +19,7 @@ class BruteForceConfig:
     max_attempts: int = 100
     requests_per_second: float = 1.0
     enabled: bool = True
+    require_expected_services: bool = False
 
 class BruteForceModule:
     def __init__(self, config: BruteForceConfig):
@@ -95,7 +96,7 @@ class BruteForceModule:
                     })
                 elif target_service['expected']:
                     # Only report unavailable services when they're expected
-                    expected_severity = 'Info' if service_name == 'SSH' else 'Medium'
+                    expected_severity = 'Medium' if getattr(self.config, 'require_expected_services', False) else 'Info'
                     findings.append({
                         'type': 'Expected Service Not Found',
                         'severity': expected_severity,

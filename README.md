@@ -117,6 +117,10 @@ pip install -e .
 
 ### Development
 
+- Run Options (quick start):
+  ```bash
+  python3 main.py --url https://example.com --modules recon --format html --verbose
+  ```
 - Runtime install:
   ```bash
   pip install -e .
@@ -132,6 +136,14 @@ pip install -e .
 - Run as Python module:
   ```bash
   python -m web_scanner.main --url https://example.com --modules recon --format html
+  ```
+
+- Recommended virtual environment flow:
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install -e ".[dev]"
+  webscan --url https://example.com --modules recon --format html
   ```
 
 ## Usage
@@ -246,6 +258,7 @@ test_weights:
 - Use responsibly and ethically
 - Test thoroughly in isolated environments
 - Findings are indicators from automated checks and may require manual validation to confirm true positives.
+- Treat scanner output as security indicators; always manually validate important findings before remediation decisions.
 
 ## Acknowledgment
 

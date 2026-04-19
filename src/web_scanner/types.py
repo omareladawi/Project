@@ -19,6 +19,7 @@ class BruteForceConfig:
     timeout: int = 3
     max_attempts: int = 100
     requests_per_second: float = 1.0
+    require_expected_services: bool = False
     
 @dataclass 
 class ReconConfig:
