@@ -1,3 +1,21 @@
+## Logging
+
+All log output is controlled from the main entrypoint (`main.py` / `run_scanner()`).  
+Format is `[LEVEL] message` (console only, no timestamps, no file logs).
+
+- Normal run: `[INFO]` messages only.
+- `--verbose`: enables `[DEBUG]` level and prints `scanner_id` + `scanner_version` at scan start.
+
+```
+[DEBUG] scanner_id=<id> scanner_version=1.0
+[INFO] Starting reconnaissance scan
+[INFO] Request successful status=200 url=https://example.com attempt=1
+[INFO] Reconnaissance complete: found N issues
+[INFO] Report saved to: .../reports/scan_report_....html
+```
+
+---
+
 ## Execution Pipeline
 
 ```
