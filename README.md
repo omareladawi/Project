@@ -1,4 +1,26 @@
-# Web Scanner
+## Execution Pipeline
+
+```
+CLI  →  config load  →  scanner  →  finding processing  →  report
+```
+
+1. **CLI** — You run one of:
+   ```bash
+   python3 main.py --url https://example.com --modules recon --format html --verbose
+   webscan --url https://example.com --modules recon --format html
+   python -m web_scanner.main --url https://example.com --modules recon --format html
+   ```
+2. **Config load** — Default settings come from `ScannerConfig` in `src/web_scanner/types.py`.  
+   Pass `--config config/scanner_config.yaml` to override threads, timeouts, etc.
+3. **Scanner** — `VulnerabilityScanner.scan()` runs the selected modules (recon / brute / exploit)
+   and collects raw findings.
+4. **Finding processing** — Findings are deduplicated, confidence-scored, and severity-adjusted.
+5. **Report** — `generate_report()` writes an HTML/JSON/PDF file to the `reports/` directory.
+
+> ⚠️ Findings are indicators from automated checks and **require manual validation** before
+> treating them as confirmed vulnerabilities.
+
+---
 
 ## Project Structure
 ```

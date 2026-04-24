@@ -6,7 +6,7 @@ import logging
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Dict, Union
+from typing import Optional
 
 from .config.scanner_config import load_scanner_config, ScannerConfig
 from .scanner.vulnerability_scanner import VulnerabilityScanner as Scanner
@@ -36,44 +36,15 @@ async def run_scan(config: ScannerConfig) -> dict:
     scanner = Scanner(config)
     return await scanner.scan()
 
-async def main() -> int:
-    parser = argparse.ArgumentParser(description="Web Security Scanner")
-    parser.add_argument("--config", required=True, help="Path to config file")
-    parser.add_argument("--target", required=True, help="Target URL")
-    parser.add_argument("--output-dir", default="reports", help="Output directory for reports")
-    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
-    args = parser.parse_args()
 
-    # Setup logging
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = Path(f"logs/scan_{timestamp}.log")
-    setup_logging(args.verbose, log_file)
-    logger = logging.getLogger(__name__)
-
-    try:
-        # Ensure target URL is properly formatted
-        target = args.target
-        if not target.startswith(('http://', 'https://')):
-            target = f"https://{target}"
-
-        logger.info(f"Starting scan of {target}")
-        
-        # Run scan
-        results = await run_scan(args.config, target)
-        
-        # Generate report
-        output_dir = Path(args.output_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        report_path = output_dir / f"scan_report_{timestamp}.html"
-        await generate_report(results, report_path)
-        
-        logger.info(f"Scan completed. Report saved to: {report_path}")
-        return 0
-
-    except Exception as e:
-        logger.error(f"Scan failed: {str(e)}")
-        return 1
+# ---------------------------------------------------------------------------
+# run_scanner() is the PRIMARY entrypoint — used by `webscan`, `python3
+# main.py`, and `python -m web_scanner.main`.
+#
+# The async def main() that used to be here was a broken legacy stub
+# (wrong argument signature, awaiting a non-async generate_report, etc.)
+# and has been removed.  All run modes go through run_scanner() below.
+# ---------------------------------------------------------------------------
 
 def run_scanner():
     """Main entry point for the scanner"""
