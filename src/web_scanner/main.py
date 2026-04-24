@@ -6,7 +6,6 @@ import logging
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from .config.scanner_config import load_scanner_config, ScannerConfig
 from .scanner.vulnerability_scanner import VulnerabilityScanner as Scanner
@@ -16,20 +15,21 @@ def get_app_dir() -> Path:
     """Returns the base directory for the application"""
     return Path(__file__).parent.parent.parent
 
-def setup_logging(verbose: bool, log_file: Optional[Path] = None) -> None:
-    """Configure logging settings"""
+def setup_logging(verbose: bool) -> None:
+    """Configure logging settings.
+
+    All log output is controlled from this entrypoint: console only,
+    format ``[LEVEL] message``.  ``--verbose`` enables DEBUG level and
+    causes the scanner to emit its scanner_id/scanner_version at startup.
+    asyncio debug noise is suppressed even in verbose mode.
+    """
     level = logging.DEBUG if verbose else logging.INFO
-    
-    handlers = [logging.StreamHandler()]
-    if log_file:
-        log_file.parent.mkdir(parents=True, exist_ok=True)
-        handlers.append(logging.FileHandler(str(log_file)))
-    
     logging.basicConfig(
         level=level,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=handlers
+        format="[%(levelname)s] %(message)s",
+        force=True,
     )
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
 async def run_scan(config: ScannerConfig) -> dict:
     """Run the security scan"""
