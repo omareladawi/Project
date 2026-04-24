@@ -1,50 +1,52 @@
 #!/usr/bin/env python3
-
+import colorlog
 import argparse
 import asyncio
 import logging
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from .config.scanner_config import load_scanner_config, ScannerConfig
 from .scanner.vulnerability_scanner import VulnerabilityScanner as Scanner
 from .reporting.report_generator import generate_report
 
-def get_app_dir() -> Path:
+def get_app_dir():
     """Returns the base directory for the application"""
     return Path(__file__).parent.parent.parent
 
+
 def setup_logging(verbose: bool) -> None:
-    """Configure logging settings.
-
-    All log output is controlled from this entrypoint: console only,
-    format ``[LEVEL] message``.  ``--verbose`` enables DEBUG level and
-    causes the scanner to emit its scanner_id/scanner_version at startup.
-    asyncio debug noise is suppressed even in verbose mode.
-    """
     level = logging.DEBUG if verbose else logging.INFO
-    logging.basicConfig(
-        level=level,
-        format="[%(levelname)s] %(message)s",
-        force=True,
-    )
-    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
-async def run_scan(config: ScannerConfig) -> dict:
+    handler = colorlog.StreamHandler()
+    handler.setFormatter(colorlog.ColoredFormatter(
+        fmt=""
+        ""
+        ""
+        "%(log_color)s[%(levelname)s]%(reset)s %(yellow)s%(asctime)s  %(name)s%(reset)s%(blue)s%(message)s",
+        log_colors={
+            "DEBUG": "cyan",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "bold_red",
+        },
+    ))
+
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.setLevel(level)
+    root.addHandler(handler)
+
+   
+
+async def run_scan(config: ScannerConfig):
     """Run the security scan"""
     scanner = Scanner(config)
     return await scanner.scan()
 
-
-# ---------------------------------------------------------------------------
-# run_scanner() is the PRIMARY entrypoint — used by `webscan`, `python3
-# main.py`, and `python -m web_scanner.main`.
-#
-# The async def main() that used to be here was a broken legacy stub
-# (wrong argument signature, awaiting a non-async generate_report, etc.)
-# and has been removed.  All run modes go through run_scanner() below.
-# ---------------------------------------------------------------------------
 
 def run_scanner():
     """Main entry point for the scanner"""
