@@ -1,5 +1,6 @@
-from dataclasses import dataclass, field
-from typing import Optional, Dict, List
+from dataclasses import dataclass, field, asdict
+from typing import Any, Optional, Dict, List
+import logging
 
 @dataclass
 class AuthenticationConfig:
@@ -78,24 +79,27 @@ class ScannerConfig:
     
     # Proxy settings
     proxy_list: List[Dict] = field(default_factory=list)
+    rotate_proxies: bool = False
+    verify_proxies: bool = False
     
-    # Module configurations
+    # Module configurations — defaults to ModulesConfig; the CLI may override
+    # this with a list (e.g. ['recon']) or a dict from YAML at runtime.
     modules: ModulesConfig = field(default_factory=ModulesConfig)
     
-    # Authentication
-    authentication: Optional[AuthenticationConfig] = None
+    # Authentication (kept as a plain dict for simplicity — not used in demo)
+    authentication: Dict[str, Any] = field(default_factory=dict)
     
-    # Add validation settings
+    # Result processing
     min_confidence_score: float = 0.7
     max_false_positives: int = 5
     result_deduplication: bool = True
     
-    # Add depth control
+    # Depth control
     max_urls_per_domain: int = 100
     max_test_duration: int = 300  # seconds
     skip_similar_endpoints: bool = True
     
-    # Add test weighting
+    # Test weighting
     test_weights: Dict[str, float] = field(default_factory=lambda: {
         'critical': 1.0,
         'high': 0.8,
@@ -104,11 +108,33 @@ class ScannerConfig:
         'info': 0.2
     })
     
-    # Add test configuration
+    # Test configuration
     test_config: Optional[TestConfig] = None
-    
-    # Add validation settings that were missing
     test_parallelism: int = 1
     retry_failed_tests: bool = True
     fail_fast: bool = False
     test_timeout: int = 30
+    
+    # Reporting
+    report_format: str = "html"
+    report_templates: Dict[str, Any] = field(default_factory=dict)
+    report_output_dir: str = "reports"
+    template_dir: str = "templates"
+
+    def update(self, updates: Dict[str, Any]) -> None:
+        """Apply overrides safely — unknown keys are logged and skipped."""
+        for key, value in updates.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+            else:
+                logging.warning("Ignoring unknown config key: %s", key)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'ScannerConfig':
+        """Create a ScannerConfig from a dict, ignoring unknown keys."""
+        cfg = cls()
+        cfg.update(data)
+        return cfg
+
+    def to_dict(self) -> Dict[str, Any]:
+        return asdict(self)
