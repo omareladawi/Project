@@ -22,10 +22,7 @@ def setup_logging(verbose: bool) -> None:
 
     handler = colorlog.StreamHandler()
     handler.setFormatter(colorlog.ColoredFormatter(
-        fmt=""
-        ""
-        ""
-        "%(log_color)s[%(levelname)s]%(reset)s %(yellow)s%(asctime)s  %(name)s%(reset)s%(blue)s%(message)s",
+        fmt="%(log_color)s[%(levelname)s]%(reset)s %(yellow)s%(asctime)s  %(name)s%(reset)s%(blue)s%(message)s",
         log_colors={
             "DEBUG": "cyan",
             "INFO": "green",
