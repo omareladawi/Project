@@ -20,9 +20,12 @@ def get_app_dir():
 def setup_logging(verbose: bool) -> None:
     level = logging.DEBUG if verbose else logging.INFO
 
-    handler = colorlog.StreamHandler()
+    handler = colorlog.StreamHandler(stream=sys.stdout)
     handler.setFormatter(colorlog.ColoredFormatter(
-        fmt="%(log_color)s[%(levelname)s]%(reset)s %(yellow)s%(asctime)s  %(name)s%(reset)s%(blue)s%(message)s",
+        fmt="%(log_color)s[%(levelname)s]%(reset)s "
+            "%(yellow)s%(asctime)s%(reset)s: "
+            "%(blue)s%(message)s%(reset)s",
+        datefmt="%H:%M:%S",
         log_colors={
             "DEBUG": "cyan",
             "INFO": "green",
@@ -31,11 +34,14 @@ def setup_logging(verbose: bool) -> None:
             "CRITICAL": "bold_red",
         },
     ))
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
-    root = logging.getLogger()
-    root.handlers.clear()
-    root.setLevel(level)
-    root.addHandler(handler)
+    logging.basicConfig(
+        level=level,
+        handlers=[handler],
+        force=True,  
+    )
+
 
    
 
