@@ -1,3 +1,38 @@
+## 🎓 Student Quick Start
+
+New here? Run these 5 commands and you're ready to demo the scanner.
+
+**1. Install (once)**
+```bash
+pip install -e ".[dev]"
+```
+
+**2. Quick recon scan**
+```bash
+webscan --url https://example.com --modules recon
+```
+
+**3. Verbose run (shows extra debug info)**
+```bash
+webscan --url https://example.com --modules recon --verbose
+```
+
+**4. Use the student config file (recommended for demos)**
+```bash
+webscan --url https://example.com --config config/scanner_config.student.yaml
+```
+
+**5. Generate a JSON report instead of HTML**
+```bash
+webscan --url https://example.com --modules recon --format json
+```
+
+Reports are saved to the `reports/` folder automatically.
+
+> ⚠️ Always get written permission before scanning any site you don't own.
+
+---
+
 ## Logging
 
 All log output is controlled from the main entrypoint (`main.py` / `run_scanner()`).  

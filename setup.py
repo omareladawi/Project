@@ -23,6 +23,7 @@ setup(
         "scapy>=2.5.0",
         "requests>=2.28.0",
         "jinja2>=3.0.1",
+        "colorlog>=6.0.0",
         "validators>=0.20.0",
         "paramiko>=2.8.1",
         "PyJWT>=2.6.0",

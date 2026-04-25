@@ -1,0 +1,43 @@
+# ============================================================
+# scanner_config.student.yaml — Student Edition Config
+# ============================================================
+# Quick start: pass this file with --config to the scanner.
+#
+#   webscan --url https://example.com --config config/scanner_config.student.yaml
+#
+# Only the most commonly needed options are listed here.
+# For the full set of options see scanner_config.yaml.
+# ============================================================
+
+# --- Basic scan settings ---
+threads: 5          # How many requests to send in parallel (keep low for demos)
+timeout: 20         # Seconds to wait for each request before giving up
+verify_ssl: false   # Set to true if the target uses a valid SSL certificate
+
+# --- How fast to send requests ---
+requests_per_second: 3.0   # Be polite — don't hammer the target
+burst_size: 5
+
+# --- How deep / how many pages to scan ---
+max_crawl_depth: 2         # How many link-levels deep to follow (2 is fine for a demo)
+max_urls_per_domain: 50    # Stop after this many URLs on the same site
+
+# --- Result quality ---
+min_confidence_score: 0.6  # Only keep findings with at least 60% confidence
+result_deduplication: true # Remove duplicate findings automatically
+
+# --- Modules ---
+# Only 'recon' is enabled by default — safe for demos and presentations.
+# Change 'enabled' to true for brute_force or exploit only in a lab environment
+# where you have explicit written permission to do so.
+modules:
+  reconnaissance:
+    enabled: true
+    port_scan: false      # Port scanning is noisy; disable for quick demos
+    service_detection: true
+
+  brute_force:
+    enabled: false        # Do NOT enable without explicit permission
+
+  exploit:
+    enabled: false        # Do NOT enable without explicit permission
