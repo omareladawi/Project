@@ -53,21 +53,53 @@ async def run_scan(config: ScannerConfig):
 
 def run_scanner():
     """Main entry point for the scanner"""
-    parser = argparse.ArgumentParser(description='Web Application Security Scanner')
-    
+    parser = argparse.ArgumentParser(
+        description=(
+            'Web Application Security Scanner — '
+            'scans a target URL for common web vulnerabilities and '
+            'generates a structured report.'
+        ),
+        epilog=(
+            'Examples:\n'
+            '  webscan --url https://example.com\n'
+            '  webscan --url https://example.com --format json --verbose\n'
+            '  webscan --url https://example.com --config config/scanner_config.student.yaml\n'
+            '\n'
+            'Always obtain written permission before scanning a site you do not own.'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
     # Required arguments
-    parser.add_argument('--url', required=True, help='Target URL to scan')
-    
+    parser.add_argument('--url', required=True,
+                        help='Target URL to scan (e.g. https://example.com)')
+
     # Scan configuration
-    parser.add_argument('--config', help='Path to configuration file')
-    parser.add_argument('--modules', nargs='+', choices=['recon', 'brute', 'exploit'],
-                       default=['recon'], help='Modules to run (default: recon)')
-    
+    parser.add_argument('--config',
+                        help='Path to a YAML config file '
+                             '(default: built-in defaults; '
+                             'use config/scanner_config.student.yaml for demos)')
+    parser.add_argument(
+        '--modules', nargs='+',
+        choices=['recon', 'brute', 'exploit'],
+        default=['recon'],
+        help=(
+            'Modules to run (default: recon). '
+            '"recon" covers headers, SSL/TLS, information-disclosure, '
+            'XSS/SQLi/command-injection checks. '
+            '"brute" and "exploit" are advanced lab-only modules — '
+            'do NOT use on systems you do not own.'
+        ),
+    )
+
     # Output options
-    parser.add_argument('--output', help='Output file for the report')
+    parser.add_argument('--output',
+                        help='Path for the report file '
+                             '(default: reports/scan_report_<timestamp>.<format>)')
     parser.add_argument('--format', choices=['json', 'html', 'pdf'], default='html',
-                       help='Output format (default: html)')
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
+                        help='Report format (default: html)')
+    parser.add_argument('--verbose', action='store_true',
+                        help='Print debug-level log messages during the scan')
     
     args = parser.parse_args()
 
@@ -84,7 +116,17 @@ def run_scanner():
         
         # Setup logging before updating config
         setup_logging(args.verbose)
-        
+
+        # Warn if advanced/lab-only modules are selected
+        advanced_modules = [m for m in args.modules if m in ('brute', 'exploit')]
+        if advanced_modules:
+            logging.warning(
+                "Advanced module(s) selected: %s. "
+                "These are intended for lab environments only. "
+                "Ensure you have explicit written permission before proceeding.",
+                ', '.join(advanced_modules)
+            )
+
         # Apply CLI overrides to config
         config_data.update(cli_config)
         
