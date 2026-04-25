@@ -1,12 +1,8 @@
 # ============================================================
-# scanner_config.student.yaml — Student Edition Config
+# scanner_config.student.yaml — Quick Demo Config
 # ============================================================
-# Quick start: pass this file with --config to the scanner.
-#
+# Quick start:
 #   webscan --url https://example.com --config config/scanner_config.student.yaml
-#
-# Only the most commonly needed options are listed here.
-# For the full set of options see scanner_config.yaml.
 # ============================================================
 
 # --- Basic scan settings ---
@@ -27,17 +23,9 @@ min_confidence_score: 0.6  # Only keep findings with at least 60% confidence
 result_deduplication: true # Remove duplicate findings automatically
 
 # --- Modules ---
-# Only 'recon' is enabled by default — safe for demos and presentations.
-# Change 'enabled' to true for brute_force or exploit only in a lab environment
-# where you have explicit written permission to do so.
+# Only 'recon' is available — safe for demos and presentations.
 modules:
   reconnaissance:
     enabled: true
     port_scan: false      # Port scanning is noisy; disable for quick demos
     service_detection: true
-
-  brute_force:
-    enabled: false        # Do NOT enable without explicit permission
-
-  exploit:
-    enabled: false        # Do NOT enable without explicit permission

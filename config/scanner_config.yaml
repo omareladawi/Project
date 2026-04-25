@@ -3,9 +3,6 @@
 # ============================================================
 # Override any value here, or pass a custom file with:
 #   webscan --url https://example.com --config path/to/config.yaml
-#
-# For a minimal demo-ready config see:
-#   config/scanner_config.student.yaml
 # ============================================================
 
 # Basic scan settings
@@ -31,9 +28,6 @@ authentication:
   username: ""
   password: ""
   login_url: ""
-  token_url: ""
-  client_id: ""
-  client_secret: ""
 
 # Result quality controls
 min_confidence_score: 0.7   # Drop findings below this confidence (0–1)
@@ -52,30 +46,11 @@ test_weights:
   info: 0.2
 
 # Module toggles
-# recon is the safe default for demos and assessments.
-# brute_force and exploit are DISABLED by default — only enable in a
-# controlled lab environment with explicit written permission.
 modules:
-  brute_force:
-    enabled: false
-    target_type: ssh
-    target_host: ""
-    username: ""
-    password_list: []
-    port: 22
-    timeout: 3
-    max_attempts: 100
-    requests_per_second: 1.0
-
   reconnaissance:
     enabled: true
     port_scan: true
     service_detection: true
-
-  exploit:
-    enabled: false
-    exploit_type: rce
-    payload: "echo test"
 
 # Report output settings
 report_templates:
@@ -83,4 +58,3 @@ report_templates:
   technical_details: technical_details.html
   output_format: html    # html, pdf
   include_charts: true
-  custom_logo: path/to/logo.png
