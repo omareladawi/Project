@@ -77,18 +77,15 @@ def run_scanner():
     # Scan configuration
     parser.add_argument('--config',
                         help='Path to a YAML config file '
-                             '(default: built-in defaults; '
-                             'use config/scanner_config.student.yaml for demos)')
+                             '(default: built-in defaults)')
     parser.add_argument(
         '--modules', nargs='+',
-        choices=['recon', 'brute', 'exploit'],
+        choices=['recon'],
         default=['recon'],
         help=(
             'Modules to run (default: recon). '
             '"recon" covers headers, SSL/TLS, information-disclosure, '
-            'XSS/SQLi/command-injection checks. '
-            '"brute" and "exploit" are advanced lab-only modules — '
-            'do NOT use on systems you do not own.'
+            'XSS/SQLi/command-injection checks.'
         ),
     )
 
@@ -116,16 +113,6 @@ def run_scanner():
         
         # Setup logging before updating config
         setup_logging(args.verbose)
-
-        # Warn if advanced/lab-only modules are selected
-        advanced_modules = [m for m in args.modules if m in ('brute', 'exploit')]
-        if advanced_modules:
-            logging.warning(
-                "Advanced module(s) selected: %s. "
-                "These are intended for lab environments only. "
-                "Ensure you have explicit written permission before proceeding.",
-                ', '.join(advanced_modules)
-            )
 
         # Apply CLI overrides to config
         config_data.update(cli_config)

@@ -8,39 +8,17 @@ class AuthenticationConfig:
     username: Optional[str] = None 
     password: Optional[str] = None
     token: Optional[str] = None
-    
+
 @dataclass
-class BruteForceConfig:
-    enabled: bool = False
-    target_type: str = "ssh"
-    target_host: str = ""
-    username: str = ""
-    password_list: List[str] = field(default_factory=list)
-    port: int = 22
-    timeout: int = 3
-    max_attempts: int = 100
-    requests_per_second: float = 1.0
-    require_expected_services: bool = False
-    
-@dataclass 
 class ReconConfig:
     enabled: bool = False
     port_scan: bool = True
     service_detection: bool = True
 
-class ExploitConfig:
-    """Configuration for exploit scanning module"""
-    def __init__(self, enabled: bool = False, exploit_type: str = "rce", payload: str = "echo test"):
-        self.enabled = enabled
-        self.exploit_type = exploit_type  # Supported types: rce, lfi, xxe
-        self.payload = payload  # Test payload to use
-
 @dataclass
 class ModulesConfig:
-    """Configuration for optional scanning modules"""
-    brute_force: Optional[BruteForceConfig] = None
+    """Configuration for scanning modules"""
     reconnaissance: Optional[ReconConfig] = None
-    exploit: Optional[Dict] = None
 
 @dataclass
 class TestConfig:
