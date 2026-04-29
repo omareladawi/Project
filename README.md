@@ -7,7 +7,7 @@ or PDF reports.
 > ⚠️ **Authorisation required.** Always obtain explicit written permission before
 > scanning any host you do not personally own.
 
----
+
 
 ## Quick Start (3 commands)
 
