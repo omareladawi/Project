@@ -1,60 +1,20 @@
 # ============================================================
-# scanner_config.yaml — Default Scanner Configuration
+# scanner_config.yaml — Minimal Scanner Configuration
 # ============================================================
-# Override any value here, or pass a custom file with:
-#   webscan --url https://example.com --config path/to/config.yaml
+# Use it with:
+#   python main.py --url https://example.com --config config/scanner_config.yaml
 # ============================================================
 
 # Basic scan settings
-threads: 10         # Parallel request workers
-depth: 3            # Crawl depth (link levels to follow)
 timeout: 30         # Seconds to wait per request
 verify_ssl: false   # Set to true for sites with valid certificates
-user_agent: 'WebSecurityScanner/1.0'
+user_agent: "WebSecurityScanner/1.0"
 target_url: ""      # Set at runtime via --url
+active_tests: false
 
-# Rate limiting — keep these low to be polite to the target
-requests_per_second: 5.0
-burst_size: 10
-
-# Proxy settings (leave empty for direct connections)
-proxy_list: []      # Format: [{host, port, protocol, username, password}]
-rotate_proxies: false
-verify_proxies: false
-
-# Authentication (only needed for authenticated scans)
-authentication:
-  auth_type: form   # Options: basic, form, jwt, oauth
-  username: ""
-  password: ""
-  login_url: ""
-
-# Result quality controls
-min_confidence_score: 0.7   # Drop findings below this confidence (0–1)
-max_false_positives: 5
-result_deduplication: true
-max_urls_per_domain: 100
-max_test_duration: 300       # Hard stop after this many seconds
-skip_similar_endpoints: true
-
-# Severity weights used in risk score calculation
-test_weights:
-  critical: 1.0
-  high: 0.8
-  medium: 0.6
-  low: 0.4
-  info: 0.2
-
-# Module toggles
+# Module list (simple and explicit)
 modules:
-  reconnaissance:
-    enabled: true
-    port_scan: true
-    service_detection: true
+  - recon
 
-# Report output settings
-report_templates:
-  executive_summary: executive_summary.html
-  technical_details: technical_details.html
-  output_format: html    # html, pdf
-  include_charts: true
+# Result handling
+result_deduplication: true

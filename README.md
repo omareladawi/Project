@@ -13,13 +13,13 @@ or PDF reports.
 
 ```bash
 # 1. Install
-pip install -e ".[dev]"
+pip install -r requirements.txt
 
 # 2. Run a basic recon scan (safe default)
-webscan --url https://example.com
+python main.py --url https://example.com
 
 # 3. Save results as JSON instead of HTML
-webscan --url https://example.com --format json
+python main.py --url https://example.com --format json
 ```
 
 Reports are written to the `reports/` folder automatically.
@@ -31,9 +31,10 @@ Reports are written to the `reports/` folder automatically.
 ```bash
 git clone https://github.com/omareladawi/Project.git
 cd Project
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ---
@@ -43,13 +44,13 @@ pip install -e ".[dev]"
 ### Basic
 
 ```bash
-webscan --url https://example.com
+python main.py --url https://example.com
 ```
 
 ### With options
 
 ```bash
-webscan --url https://example.com \
+python main.py --url https://example.com \
         --format html \
         --verbose
 ```
@@ -62,6 +63,7 @@ webscan --url https://example.com \
 | `--format` | `html` | Report format: `html` \| `json` \| `pdf` |
 | `--output` | auto | Custom output file path |
 | `--config` | built-in | Path to a YAML config file |
+| `--active-tests` | off | Enable active XSS/SQLi tests (authorized targets only) |
 | `--verbose` | off | Print debug-level messages |
 
 ---
@@ -74,6 +76,7 @@ The scanner runs a **recon** module that checks:
 - SSL/TLS configuration
 - Information disclosure (server version, directory listing, email leaks)
 - Common injection patterns (XSS, SQL injection, command injection)
+- Basic auth/session hygiene (CSRF hints, cookie flags)
 
 ---
 
@@ -86,18 +89,13 @@ Project/
 │       ├── config/             # Config loader (scanner_config.py)
 │       ├── core/               # Shared utilities
 │       ├── scanner/            # Scanning engine
-│       │   ├── vulnerability_scanner.py   # Main scan orchestrator
-│       │   └── modules/
-│       │       └── reconnaissance.py      # Recon checks
+│       │   └── vulnerability_scanner.py   # Main scan orchestrator
 │       ├── reporting/          # Report generation (HTML / JSON / PDF)
 │       ├── types.py            # Shared data classes (ScannerConfig, …)
 │       └── main.py             # CLI entry point
 ├── config/
-│   ├── scanner_config.yaml              # Full config with all options
-│   └── scanner_config.student.yaml      # Minimal demo-ready config
-├── tests/                      # Pytest tests for findings processing
+│   └── scanner_config.yaml              # Minimal config
 ├── requirements.txt
-└── pyproject.toml
 ```
 
 ---
@@ -118,22 +116,19 @@ CLI → config load → scanner → finding processing → report
 
 ## Configuration
 
-Two config files are provided:
+Single config file:
 
-| File | Use case |
-|------|----------|
-| `config/scanner_config.yaml` | Full reference — all options documented |
-| `config/scanner_config.student.yaml` | Minimal, demo-safe defaults |
+- `config/scanner_config.yaml`
 
 Key options:
 
 ```yaml
-threads: 5                  # Parallel workers
-timeout: 20                 # Seconds per request
-requests_per_second: 3.0    # Throttle (be polite)
-max_urls_per_domain: 50     # Crawl limit
-min_confidence_score: 0.6   # Drop low-confidence findings
-result_deduplication: true  # Remove duplicates automatically
+timeout: 30
+verify_ssl: false
+user_agent: "WebSecurityScanner/1.0"
+modules:
+  - recon
+result_deduplication: true
 ```
 
 ---
@@ -148,17 +143,6 @@ The scanner produces three report formats:
 
 Reports include: target info, scan duration, findings list with severity / confidence
 scores / evidence / remediation guidance, and an overall risk score.
-
----
-
-## Running Tests
-
-```bash
-pytest tests/ -v
-```
-
-All 8 tests cover findings deduplication, confidence scoring, and severity adjustment —
-the core of the reporting pipeline.
 
 ---
 

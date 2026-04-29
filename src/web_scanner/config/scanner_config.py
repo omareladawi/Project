@@ -23,8 +23,8 @@ def load_scanner_config(path: str) -> ScannerConfig:
     """Load a YAML config file and return a ScannerConfig.
 
     Unknown YAML keys are logged as warnings and skipped — no crash.
-    Nested sections (authentication, modules) are stored as plain dicts;
-    the CLI overrides them before scanning starts anyway.
+    The modules section can be a list (recommended) or a legacy dict with
+    enabled flags; both are normalized by ScannerConfig.
     """
     config_path = Path(path).resolve()
     with config_path.open("r", encoding="utf-8") as f:
