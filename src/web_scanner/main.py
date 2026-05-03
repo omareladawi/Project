@@ -115,7 +115,7 @@ def run_scanner():
     )
     parser.add_argument("--format", choices=["json", "html", "pdf"], default="html")
     parser.add_argument("--verbose", action="store_true")
-
+    
     args = parser.parse_args()
 
     try:

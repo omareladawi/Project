@@ -30,7 +30,7 @@ class AuthenticationManager:
         self.logger = logging.getLogger(__name__)
         self.auth_tokens = {}
         
-    def authenticate(self) -> Dict:
+    def authenticate(self):
         """Perform authentication based on configured method"""
         try:
             if self.config.auth_type == 'basic':
@@ -47,7 +47,7 @@ class AuthenticationManager:
             self.logger.error(f"Authentication failed: {str(e)}")
             raise
 
-    def _basic_auth(self) -> Dict:
+    def _basic_auth(self):
         """Handle Basic Authentication"""
         if not self.config.username or not self.config.password:
             raise ValueError("Username and password required for basic auth")
@@ -60,7 +60,7 @@ class AuthenticationManager:
             'Authorization': f'Basic {auth_string}'
         }
 
-    def _form_auth(self) -> Dict:
+    def _form_auth(self):
         """Handle Form-based Authentication"""
         if not self.config.login_url:
             raise ValueError("Login URL required for form auth")
@@ -90,7 +90,7 @@ class AuthenticationManager:
             
         return dict(self.session.cookies)
 
-    def _jwt_auth(self) -> Dict:
+    def _jwt_auth(self):
         """Handle JWT Authentication"""
         if self.config.token:
             # Validate JWT token
@@ -118,7 +118,7 @@ class AuthenticationManager:
         else:
             raise ValueError("Either token or token_url must be provided for JWT auth")
 
-    def _oauth_auth(self) -> Dict:
+    def _oauth_auth(self):
         """Handle OAuth2 Authentication"""
         if not all([self.config.client_id, self.config.client_secret, self.config.token_url]):
             raise ValueError("client_id, client_secret, and token_url required for OAuth")
@@ -138,7 +138,7 @@ class AuthenticationManager:
         else:
             raise Exception("OAuth authentication failed")
 
-    def _extract_csrf_token(self, response) -> Optional[str]:
+    def _extract_csrf_token(self, response):
         """Extract CSRF token from response"""
         # Try common CSRF token patterns
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -155,7 +155,7 @@ class AuthenticationManager:
             
         return None
 
-    def refresh_token(self) -> None:
+    def refresh_token(self):
         """Refresh authentication token if needed"""
         if self.config.auth_type in ['jwt', 'oauth']:
             self.auth_tokens = self.authenticate()

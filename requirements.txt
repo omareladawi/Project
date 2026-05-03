@@ -5,3 +5,9 @@ aiohttp>=3.8.1
 jinja2>=3.0.1
 colorlog>=6.0.0
 reportlab>=3.6.8
+
+# HTTP & networking
+requests>=2.25.1
+
+# Authentication
+PyJWT>=2.0.0

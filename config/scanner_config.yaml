@@ -1,9 +1,6 @@
-# ============================================================
-# scanner_config.yaml — Minimal Scanner Configuration
-# ============================================================
-# Use it with:
-#   python main.py --url https://example.com --config config/scanner_config.yaml
-# ============================================================
+# =========================
+# Scanner Configuration
+# =========================
 
 # Basic scan settings
 timeout: 30         # Seconds to wait per request
@@ -15,6 +12,8 @@ active_tests: false
 # Module list (simple and explicit)
 modules:
   - recon
+  -exploitation
 
 # Result handling
 result_deduplication: true
+
