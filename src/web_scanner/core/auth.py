@@ -104,6 +104,10 @@ class AuthenticationManager:
                 self.logger.error("Invalid JWT token")
                 raise
         elif self.config.token_url:
+            # Verify HTTPS for security when sending credentials
+            if not self.config.token_url.startswith('https://'):
+                self.logger.warning("Token URL should use HTTPS for security: %s", self.config.token_url)
+            
             # Request new JWT token
             data = {
                 'username': self.config.username,
@@ -122,6 +126,10 @@ class AuthenticationManager:
         """Handle OAuth2 Authentication"""
         if not all([self.config.client_id, self.config.client_secret, self.config.token_url]):
             raise ValueError("client_id, client_secret, and token_url required for OAuth")
+        
+        # Verify HTTPS for security when sending credentials
+        if not self.config.token_url.startswith('https://'):
+            self.logger.warning("OAuth token URL should use HTTPS for security: %s", self.config.token_url)
             
         data = {
             'grant_type': 'client_credentials',
